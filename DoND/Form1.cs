@@ -181,9 +181,11 @@ namespace DoND
 
         private void dealerOffer(double finalVal)
         {
+           
             double offerSeed = ExpectedValue(CashRemaining, numCasesLeft--);
+         //   MessageBox.Show(Math.Round(offerSeed, 0).ToString());
             double[] offerModifiers = new double[7] {0.05, 0.08, 0.12, 0.15, 0.25, 0.30, 0.40 };
-
+             double offerAmount = 0.0;
             if (numCasesLeft == 0)
             {
                 MessageBox.Show("You won $" + finalVal);
@@ -192,9 +194,14 @@ namespace DoND
 
             if ((numCasesLeft % 3 == 0) && (numCasesLeft < 21) && (numCasesLeft >= 3))
             {
-                int j = random.Next(7);
+                int j = random.Next(0,7);
+                int plusOrMinus = random.Next(1,3);
                 double offerOffSet = offerModifiers[j] * offerSeed;
-                double offerAmount = offerOffSet + offerSeed;
+                
+                if (plusOrMinus == 1)
+                    offerAmount = offerSeed - offerOffSet;
+                else if (plusOrMinus == 2)
+                    offerAmount = offerSeed + offerOffSet;
 
                 if (MessageBox.Show("The offer is $" + Math.Round(offerAmount, 0), "Dealer Offer", MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
