@@ -16,10 +16,11 @@ namespace DoND
         long[] Amounts = new long[21] {
             10,20,30,40,50,80,100,200,500,750,1000,2000,5000,7500,10000,15000,20000,50000,80000,100000,250000
         };
-        double[] CashRemaining = new double[21] {
+        public static double[] CashRemaining = new double[21] {
             10,20,30,40,50,80,100,200,500,750,1000,2000,5000,7500,10000,15000,20000,50000,80000,100000,250000
         };
-        double numCasesLeft = 21;
+        public static double numCasesLeft = 21;
+        public static double offerAmount = 0;
         static Random random = new Random();
         public static OrderedDictionary Cases = new OrderedDictionary();
         public static OrderedDictionary AmountInCases = new OrderedDictionary();
@@ -29,10 +30,7 @@ namespace DoND
 
         }
 
-        private void btnReject_Click(object sender, EventArgs e)
-        {
-
-        }
+     
 
         private void Form1_Load(object sender, EventArgs e)
         {   
@@ -43,7 +41,7 @@ namespace DoND
             ExpectedValue(CashRemaining, numCasesLeft);
         }
 
-        private void ExpectedValue(double[] ex, double numCasesLeft)
+        private double ExpectedValue(double[] ex, double numCasesLeft)
         {
             double expected = 0.0;
            
@@ -51,8 +49,8 @@ namespace DoND
             {
                 expected += (x * (1.0 / numCasesLeft));
             }
-            MessageBox.Show("Expected value: " + expected);
-
+          
+            return expected;
         }
         // because a label element cannot directly have a value we call
         // this method that uses OrderedDictionaries to create entries
@@ -107,16 +105,9 @@ namespace DoND
             AmountInCases.Add("label39", CashRemaining[z--]);
             AmountInCases.Add("label40", CashRemaining[z--]);
             AmountInCases.Add("label41", CashRemaining[z--]);
-
-
-
      
         }
 
-        private void btnAccept_Click(object sender, EventArgs e)
-        { 
-           
-        }
 
         // Fisher-Yates shuffle
         private static void Shuffle(long[] array)
@@ -131,8 +122,6 @@ namespace DoND
                 array[i - 1] = tmp;
             }
         }
-
-
       
         // Every label's Click event is handled by this event handler
         private void label_Click(object sender, EventArgs e)
@@ -163,29 +152,61 @@ namespace DoND
                             if (c.Text.Equals(value))
                             {
                                 c.ForeColor = Color.DarkBlue;
-                                c.Font = new Font("Arial", 16, FontStyle.Strikeout);
+                                c.Font = new Font("Arial", 12, FontStyle.Strikeout);
                                 break;
                             }
                         }
                         clickedLabel.Text = de.Value.ToString();
                         break;
                     }
-                    for ( int x = 0; x < CashRemaining.Length; x++)
-                    {               
-                            
-                    }
+                  
                 }
 
-      
+                double val = Convert.ToDouble(value);
+                for ( int x = 0; x < CashRemaining.Length; x++)
+                {
+                    if (val == CashRemaining[x])
+                    {
+                        CashRemaining[x] = 0;
+                    }
+                }
                  clickedLabel.ForeColor = Color.Red;
                 
-                 ExpectedValue(CashRemaining, numCasesLeft--);
+                
+                 dealerOffer(val);
                     return;
                 } 
 
         }
 
+        private void dealerOffer(double finalVal)
+        {
+            double offerSeed = ExpectedValue(CashRemaining, numCasesLeft--);
+            double[] offerModifiers = new double[7] {0.05, 0.08, 0.12, 0.15, 0.25, 0.30, 0.40 };
 
+            if (numCasesLeft == 0)
+            {
+                MessageBox.Show("You won $" + finalVal);
+                Application.Exit();
+            }
+
+            if ((numCasesLeft % 3 == 0) && (numCasesLeft < 21) && (numCasesLeft >= 3))
+            {
+                int j = random.Next(7);
+                double offerOffSet = offerModifiers[j] * offerSeed;
+                double offerAmount = offerOffSet + offerSeed;
+
+                if (MessageBox.Show("The offer is $" + Math.Round(offerAmount, 0), "Dealer Offer", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                {
+                    MessageBox.Show("You won $" + Math.Round(offerAmount, 0) );
+                    Application.Exit();
+
+                }
+
+
+            }
+
+        }
 
 
     }
