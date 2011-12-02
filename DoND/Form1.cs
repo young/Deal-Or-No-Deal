@@ -85,7 +85,6 @@ namespace DoND
             AmountInCases.Add("label29", CashRemaining[z--]);
             AmountInCases.Add("label30", CashRemaining[z--]);
             AmountInCases.Add("label31", CashRemaining[z--]);
-            AmountInCases.Add("label31", CashRemaining[z--]);
             AmountInCases.Add("label32", CashRemaining[z--]);
             AmountInCases.Add("label33", CashRemaining[z--]);
             AmountInCases.Add("label34", CashRemaining[z--]);
@@ -127,6 +126,10 @@ namespace DoND
         private void label_Click(object sender, EventArgs e)
         {
             Label clickedLabel = sender as Label;
+             Control.ControlCollection ctrls = this.Controls;
+            string name;
+            string value = "";
+
 
             // simple check to see if the label has already 
             // been clicked by checking the forground color.
@@ -136,10 +139,46 @@ namespace DoND
             { 
                 foreach (DictionaryEntry de in Cases)
                 { 
-                    string name = de.Key.ToString();
+                    name = de.Key.ToString();
+                    value = de.Value.ToString();
                     if (name.Equals(clickedLabel.Name))
+                    {
+                        foreach (Control c in ctrls)
+                        {
+                            if (c.Text.Equals(value))
+                            {
+                                c.ForeColor = Color.DarkBlue;
+                                c.Font = new Font("Arial", 16, FontStyle.Strikeout);
+                            }
+
+                        }
+                        
                         clickedLabel.Text = de.Value.ToString();
+                        break;
+                    }
                 }
+
+                //foreach (DictionaryEntry de in AmountInCases)
+                //{
+                //    string caValue = de.Value.ToString();
+                //    string caName = de.Key.ToString();
+                //    if (caValue.Equals(value)){
+                       
+                //        foreach (Control c in ctrls)
+                //        {
+                //            if (c.Name.Equals(caName))
+                //            {
+                //                MessageBox.Show("clck");
+                //                c.Text = "removed";
+                //            }
+
+                //        }
+                        
+                        
+                     
+
+                //    }
+                //}
       
                  clickedLabel.ForeColor = Color.Red;
                     return;
