@@ -10,7 +10,7 @@ using System.Collections;
 using System.Collections.Specialized;
 
 namespace DoND
-{
+{ 
     public partial class Form1 : Form
     {
         long[] Amounts = new long[21] {
@@ -18,7 +18,7 @@ namespace DoND
         };
 
         static Random random = new Random();
-
+        public static OrderedDictionary Cases = new OrderedDictionary();
         public Form1()
         {
             InitializeComponent();
@@ -32,7 +32,8 @@ namespace DoND
 
         private void Form1_Load(object sender, EventArgs e)
         {
-                 
+            Shuffle(Amounts);
+            applyGroups();  
         }
 
    
@@ -48,7 +49,6 @@ namespace DoND
           i = i - 1;
 
 
-            OrderedDictionary Cases = new OrderedDictionary();
             Cases.Add("label1", Amounts[i--]);
             Cases.Add("label2", Amounts[i--]);
             Cases.Add("label3", Amounts[i--]);
@@ -56,6 +56,7 @@ namespace DoND
             Cases.Add("label5", Amounts[i--]);
             Cases.Add("label6", Amounts[i--]);
             Cases.Add("label7", Amounts[i--]);
+            Cases.Add("label8", Amounts[i--]);
             Cases.Add("label9", Amounts[i--]);
             Cases.Add("label10", Amounts[i--]);
             Cases.Add("label11", Amounts[i--]);
@@ -69,32 +70,12 @@ namespace DoND
             Cases.Add("label19", Amounts[i--]);
             Cases.Add("label20", Amounts[i--]);
             Cases.Add("label21", Amounts[i--]);
-            // setup collections for keys and values
-            ICollection keyCollection = Cases.Keys;
-            ICollection valueCollection = Cases.Values;
 
-            // Display the contents of the "new" Dictionary using an enumerator
-            IDictionaryEnumerator myEnumerator = Cases.GetEnumerator();
-
-            String[] myKeys = new String[Cases.Count];
-            String[] myValues = new String[Cases.Count];
-        
-          
-
-
-            foreach (DictionaryEntry de in Cases)
-            {
-                MessageBox.Show(de.Value.ToString());
-            }
-
-      
-
-
+     
         }
 
         private void btnAccept_Click(object sender, EventArgs e)
-        { Shuffle(Amounts);
-            applyGroups();
+        { 
            
         }
 
@@ -110,6 +91,38 @@ namespace DoND
                 array[j] = array[i - 1];
                 array[i - 1] = tmp;
             }
+        }
+
+
+        /// <summary>
+        /// Every label's Click event is handled by this event handler
+        /// </summary>
+        /// <param name="sender">The label that was clicked</param>
+        /// <param name="e"></param>
+        private void label_Click(object sender, EventArgs e)
+        {
+            Label clickedLabel = sender as Label;
+
+            // simple check to see if the label has already 
+            // been clicked by checking the forground color.
+            // if it has been clicked then the click will not
+            // do anything.
+            if (clickedLabel.ForeColor != Color.Red)
+            { 
+                foreach (DictionaryEntry de in Cases)
+                { 
+                    string name = de.Key.ToString();
+                    if (name.Equals(clickedLabel.Name))
+                        clickedLabel.Text = de.Value.ToString();
+                }
+      
+                 clickedLabel.ForeColor = Color.Red;
+                    return;
+                } 
+                   
+
+               
+            
         }
 
 
