@@ -16,10 +16,10 @@ namespace DoND
         long[] Amounts = new long[21] {
             10,20,30,40,50,80,100,200,500,750,1000,2000,5000,7500,10000,15000,20000,50000,80000,100000,250000
         };
-        long[] CashRemaining = new long[21] {
+        double[] CashRemaining = new double[21] {
             10,20,30,40,50,80,100,200,500,750,1000,2000,5000,7500,10000,15000,20000,50000,80000,100000,250000
         };
-
+        double numCasesLeft = 21;
         static Random random = new Random();
         public static OrderedDictionary Cases = new OrderedDictionary();
         public static OrderedDictionary AmountInCases = new OrderedDictionary();
@@ -39,9 +39,21 @@ namespace DoND
             // randomize the amounts
             Shuffle(Amounts);
             
-            applyGroups();  
+            applyGroups();
+            ExpectedValue(CashRemaining, numCasesLeft);
         }
 
+        private void ExpectedValue(double[] ex, double numCasesLeft)
+        {
+            double expected = 0.0;
+           
+            foreach (double x in ex)
+            {
+                expected += (x * (1.0 / numCasesLeft));
+            }
+            MessageBox.Show("Expected value: " + expected);
+
+        }
         // because a label element cannot directly have a value we call
         // this method that uses OrderedDictionaries to create entries
         // that will correspond to labels in the form. It will then
@@ -142,45 +154,32 @@ namespace DoND
                     name = de.Key.ToString();
                     value = de.Value.ToString();
                     if (name.Equals(clickedLabel.Name))
-                    {
-                        foreach (Control c in ctrls)
+                    {                        
+                       foreach (Control c in ctrls)
                         {
+                            // search the form for a label(control) where the
+                            // text field equals the value of the case
+                            // that was just clicked
                             if (c.Text.Equals(value))
                             {
                                 c.ForeColor = Color.DarkBlue;
                                 c.Font = new Font("Arial", 16, FontStyle.Strikeout);
+                                break;
                             }
-
                         }
-                        
                         clickedLabel.Text = de.Value.ToString();
                         break;
                     }
+                    for ( int x = 0; x < CashRemaining.Length; x++)
+                    {               
+                            
+                    }
                 }
 
-                //foreach (DictionaryEntry de in AmountInCases)
-                //{
-                //    string caValue = de.Value.ToString();
-                //    string caName = de.Key.ToString();
-                //    if (caValue.Equals(value)){
-                       
-                //        foreach (Control c in ctrls)
-                //        {
-                //            if (c.Name.Equals(caName))
-                //            {
-                //                MessageBox.Show("clck");
-                //                c.Text = "removed";
-                //            }
-
-                //        }
-                        
-                        
-                     
-
-                //    }
-                //}
       
                  clickedLabel.ForeColor = Color.Red;
+                
+                 ExpectedValue(CashRemaining, numCasesLeft--);
                     return;
                 } 
 
